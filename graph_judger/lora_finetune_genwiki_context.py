@@ -194,6 +194,7 @@ if __name__ == "__main__":
             save_steps=20,
             output_dir=_args.output_dir,
             save_total_limit=3,
+            push_to_hub=True,
             hub_model_id=_args.model_hub,
             load_best_model_at_end=True if VAL_SET_SIZE > 0 else False,
             ddp_find_unused_parameters=False if ddp else None,
