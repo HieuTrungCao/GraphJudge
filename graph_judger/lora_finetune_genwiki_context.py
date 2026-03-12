@@ -15,12 +15,13 @@ from peft import (
     get_peft_model,
     get_peft_model_state_dict,
 )
+import argparse
 
 
 
 # optimized for RTX 4090. for larger GPUs, increase some of these?
 MICRO_BATCH_SIZE = 8                                            # this could actually be 5 but i like powers of 2
-BATCH_SIZE = 1                                               # 128
+BATCH_SIZE = 128                                               # 128
 GRADIENT_ACCUMULATION_STEPS = BATCH_SIZE // MICRO_BATCH_SIZE
 EPOCHS = 2                                                      # we don't always need 3 tbh
 STEPS = 500
@@ -35,8 +36,8 @@ TARGET_MODULES = [
     "v_proj",
 ]
 
-DATA_PATH = "data/genwiki_4omini_context/train_instructions_context_llama2_7b.json"
-OUTPUT_DIR = "models/llama2-7b-lora-genwiki-context"
+# DATA_PATH = "data/genwiki_4omini_context/train_instructions_context_llama2_7b.json"
+# OUTPUT_DIR = "models/llama2-7b-lora-genwiki-context"
 base_model_path = "NousResearch/Llama-2-7b-hf"
 # base_model_path = "meta-llama/Llama-2-7b"
 
@@ -128,8 +129,19 @@ def generate_and_tokenize_prompt(data_point):
     }
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    # parser.add_argument("--finput", type=str, default="data/WN11/test_instructions_llama.csv")
+    # parser.add_argument("--foutput", type=str, default="data/WN11/pred_instructions_llama2_7b.csv")
+    # parser.add_argument("--finput", type=str, default="data/FB13/test_instructions_llama.csv")
+    # parser.add_argument("--foutput", type=str, default="data/FB13/pred_instructions_llama2_7b.csv")
+    parser.add_argument("--data_path", type=str, default="data/genwiki_4omini_context/train_instructions_context_llama2_7b.json")
+    parser.add_argument("--output_dir", type=str, default="models/llama2-7b-lora-genwiki-context")  # pred_instructions_context_genwiki_llama2_7b_itr1.csv
+    # parser.add_argument("--finput", type=str, default="data/WN18RR/test_instructions_llama_merge.csv")
+    # parser.add_argument("--foutput", type=str, default="data/WN18RR/pred_instructions_llama2_7b_merge.csv")
+    _args = parser.parse_args()
+
     # 加载数据集
-    data = load_dataset("json", data_files=DATA_PATH)
+    data = load_dataset("json", data_files=_args.data_path)
     
     # 数据预处理
     if VAL_SET_SIZE > 0:
@@ -170,7 +182,7 @@ if __name__ == "__main__":
             save_strategy="steps",
             eval_steps=20 if VAL_SET_SIZE > 0 else None,
             save_steps=20,
-            output_dir=OUTPUT_DIR,
+            output_dir=_args.output_dir,
             save_total_limit=3,
             load_best_model_at_end=True if VAL_SET_SIZE > 0 else False,
             ddp_find_unused_parameters=False if ddp else None,
@@ -192,6 +204,6 @@ if __name__ == "__main__":
     trainer.train()
 
     # 保存模型和分词器
-    model.save_pretrained(OUTPUT_DIR)
-    tokenizer.save_pretrained(OUTPUT_DIR)
-    print("\n Training completed! Model saved to:", OUTPUT_DIR)
+    model.save_pretrained(_args.output_dir)
+    tokenizer.save_pretrained(_args.output_dir)
+    print("\n Training completed! Model saved to:", _args.output_dir)
