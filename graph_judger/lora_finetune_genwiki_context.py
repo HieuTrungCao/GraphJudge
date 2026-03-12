@@ -144,7 +144,8 @@ if __name__ == "__main__":
     # parser.add_argument("--finput", type=str, default="data/FB13/test_instructions_llama.csv")
     # parser.add_argument("--foutput", type=str, default="data/FB13/pred_instructions_llama2_7b.csv")
     parser.add_argument("--data_path", type=str, default="data/genwiki_4omini_context/train_instructions_context_llama2_7b.json")
-    parser.add_argument("--output_dir", type=str, default="models/llama2-7b-lora-genwiki-context")  # pred_instructions_context_genwiki_llama2_7b_itr1.csv
+    parser.add_argument("--output_dir", type=str, default="models/ueihieu/llama2-7b-lora-genwiki")  # pred_instructions_context_genwiki_llama2_7b_itr1.csv
+    parser.add_argument("--model_hub", type=str, default="")  # pred_instructions_context_genwiki_llama2_7b_itr1.csv
     # parser.add_argument("--finput", type=str, default="data/WN18RR/test_instructions_llama_merge.csv")
     # parser.add_argument("--foutput", type=str, default="data/WN18RR/pred_instructions_llama2_7b_merge.csv")
     _args = parser.parse_args()
@@ -193,6 +194,7 @@ if __name__ == "__main__":
             save_steps=20,
             output_dir=_args.output_dir,
             save_total_limit=3,
+            hub_model_id=_args.model_hub,
             load_best_model_at_end=True if VAL_SET_SIZE > 0 else False,
             ddp_find_unused_parameters=False if ddp else None,
             optim="adamw_torch",
@@ -212,6 +214,7 @@ if __name__ == "__main__":
     # 训练模型
     trainer.train()
 
+    trainer.push_to_hub()
     # 保存模型和分词器
     model.save_pretrained(_args.output_dir)
     tokenizer.save_pretrained(_args.output_dir)
