@@ -187,7 +187,7 @@ if __name__ == "__main__":
             load_best_model_at_end=True if VAL_SET_SIZE > 0 else False,
             ddp_find_unused_parameters=False if ddp else None,
             optim="adamw_torch",
-            # report_to="wandb",
+            report_to="wandb",
             logging_strategy="steps",
             logging_first_step=True,
         ),
