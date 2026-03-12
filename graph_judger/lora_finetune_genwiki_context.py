@@ -144,7 +144,7 @@ if __name__ == "__main__":
     # parser.add_argument("--finput", type=str, default="data/FB13/test_instructions_llama.csv")
     # parser.add_argument("--foutput", type=str, default="data/FB13/pred_instructions_llama2_7b.csv")
     parser.add_argument("--data_path", type=str, default="data/genwiki_4omini_context/train_instructions_context_llama2_7b.json")
-    parser.add_argument("--output_dir", type=str, default="models/ueihieu/llama2-7b-lora-genwiki")  # pred_instructions_context_genwiki_llama2_7b_itr1.csv
+    parser.add_argument("--output_dir", type=str, default="ueihieu/llama2-7b-lora-genwiki")  # pred_instructions_context_genwiki_llama2_7b_itr1.csv
     parser.add_argument("--model_hub", type=str, default="")  # pred_instructions_context_genwiki_llama2_7b_itr1.csv
     # parser.add_argument("--finput", type=str, default="data/WN18RR/test_instructions_llama_merge.csv")
     # parser.add_argument("--foutput", type=str, default="data/WN18RR/pred_instructions_llama2_7b_merge.csv")
