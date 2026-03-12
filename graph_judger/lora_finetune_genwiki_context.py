@@ -28,6 +28,13 @@ try:
 except:
     wandb.login() # If running locally or without Kaggle secrets, this will prompt for the key
 
+from huggingface_hub import login
+
+user_secrets = UserSecretsClient()
+hf_token = user_secrets.get_secret("HUNGGING_FACE")
+
+login(token=hf_token)
+
 # optimized for RTX 4090. for larger GPUs, increase some of these?
 MICRO_BATCH_SIZE = 8                                            # this could actually be 5 but i like powers of 2
 BATCH_SIZE = 128                                               # 128
