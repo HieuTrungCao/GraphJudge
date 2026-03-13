@@ -137,7 +137,7 @@ def evaluate(
 
 def batch_evaluate(
     instructions,
-    temperature=0,       # 0.1
+    temperature=0.01,       # 0.1
     top_p=0.75,
     top_k=10,
     num_beams=4,
