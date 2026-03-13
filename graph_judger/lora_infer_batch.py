@@ -19,6 +19,14 @@ LORA_WEIGHTS = "ueihieu/llama2-7b-lora-genwiki"
 # LORA_WEIGHTS = "models/llama2-7b-lora-genwiki-context-tmp/"
 # LORA_WEIGHTS = "models/llama2-7b-lora-genwiki-20250508/" 
 
+from kaggle_secrets import UserSecretsClient
+from huggingface_hub import login
+
+user_secrets = UserSecretsClient()
+hf_token = user_secrets.get_secret("HUNGGING_FACE")
+
+login(token=hf_token)
+
 # tokenizer
 tokenizer = AutoTokenizer.from_pretrained(LORA_WEIGHTS, add_eos_token=True)
 tokenizer.padding_side = 'left'
