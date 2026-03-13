@@ -9,12 +9,12 @@ import transformers
 from transformers import LlamaTokenizer, LlamaForCausalLM, GenerationConfig, AutoTokenizer
 
 # model config
-BASE_MODEL = "meta-llama/Llama-3.2-1B"
+BASE_MODEL = "NousResearch/Llama-2-7b-hf"
 # LORA_WEIGHTS = "models/llama2-7b-lora-wn18rr/"
 # LORA_WEIGHTS = "models/llama2-7b-lora-wn11/"
 # LORA_WEIGHTS = "models/llama2-7b-lora-FB13/"
 
-LORA_WEIGHTS = "models/Llama-3.2-1B-instruct-lora-genwiki-context/checkpoint-500"
+LORA_WEIGHTS = "ueihieu/llama2-7b-lora-genwiki"
 # LORA_WEIGHTS = "models/llama2-7b-lora-scierc-context/"
 # LORA_WEIGHTS = "models/llama2-7b-lora-genwiki-context-tmp/"
 # LORA_WEIGHTS = "models/llama2-7b-lora-genwiki-20250508/" 
