@@ -37,7 +37,7 @@ login(token=hf_token)
 
 # optimized for RTX 4090. for larger GPUs, increase some of these?
 MICRO_BATCH_SIZE = 8                                            # this could actually be 5 but i like powers of 2
-BATCH_SIZE = 128                                               # 128
+BATCH_SIZE = 64                                               # 128
 GRADIENT_ACCUMULATION_STEPS = BATCH_SIZE // MICRO_BATCH_SIZE
 EPOCHS = 2                                                      # we don't always need 3 tbh
 STEPS = 500
