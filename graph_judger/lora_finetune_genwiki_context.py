@@ -22,11 +22,11 @@ import wandb
 # Login to W&B. You can use Kaggle secrets for security.
 # The API key can be found in your W&B profile settings.
 from kaggle_secrets import UserSecretsClient
-try:
-    wandb_key = UserSecretsClient().get_secret("WANDB_API_KEY")
-    wandb.login(key=wandb_key)
-except:
-    wandb.login() # If running locally or without Kaggle secrets, this will prompt for the key
+# try:
+#     wandb_key = UserSecretsClient().get_secret("WANDB_API_KEY")
+#     wandb.login(key=wandb_key)
+# except:
+#     wandb.login() # If running locally or without Kaggle secrets, this will prompt for the key
 
 from huggingface_hub import login
 
