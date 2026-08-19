@@ -59,7 +59,7 @@ base_model_path = "NousResearch/Llama-2-7b-hf"
 
 
 # ddp
-device_map = "cuda"
+device_map = "auto"
 world_size = int(os.environ.get("WORLD_SIZE", 1))
 ddp = world_size != 1
 if ddp:
