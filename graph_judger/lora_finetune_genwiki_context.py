@@ -37,7 +37,7 @@ login(token=hf_token)
 
 # optimized for RTX 4090. for larger GPUs, increase some of these?
 MICRO_BATCH_SIZE = 8                                            # this could actually be 5 but i like powers of 2
-BATCH_SIZE = 64                                               # 128
+BATCH_SIZE = 1                                               # 128
 GRADIENT_ACCUMULATION_STEPS = BATCH_SIZE // MICRO_BATCH_SIZE
 EPOCHS = 2                                                      # we don't always need 3 tbh
 STEPS = 500
@@ -153,9 +153,17 @@ if __name__ == "__main__":
     parser.add_argument("--data_path", type=str, default="data/genwiki_4omini_context/train_instructions_context_llama2_7b.json")
     parser.add_argument("--output_dir", type=str, default="models/llama2-7b-lora-genwiki-context")  # pred_instructions_context_genwiki_llama2_7b_itr1.csv
     parser.add_argument("--model_hub", type=str, default="ueihieu/llama2-7b-lora-genwiki")  # pred_instructions_context_genwiki_llama2_7b_itr1.csv
+    parser.add_argument("--batch_size", type=int, default=1, help="Batch size for training and evaluation")
+    parser.add_argument("--micro_batch_size", type=int, default=8, help="Micro batch size")
     # parser.add_argument("--finput", type=str, default="data/WN18RR/test_instructions_llama_merge.csv")
     # parser.add_argument("--foutput", type=str, default="data/WN18RR/pred_instructions_llama2_7b_merge.csv")
     _args = parser.parse_args()
+
+    BATCH_SIZE = _args.batch_size
+    MICRO_BATCH_SIZE = _args.micro_batch_size
+    GRADIENT_ACCUMULATION_STEPS = BATCH_SIZE // MICRO_BATCH_SIZE
+    if ddp:
+        GRADIENT_ACCUMULATION_STEPS = GRADIENT_ACCUMULATION_STEPS // world_size
 
     # 加载数据集
     data = load_dataset("json", data_files=_args.data_path)
@@ -187,8 +195,9 @@ if __name__ == "__main__":
         train_dataset=train_data,
         eval_dataset=val_data,
         args=transformers.TrainingArguments(
-            # per_device_train_batch_size=MICRO_BATCH_SIZE,
-            # gradient_accumulation_steps=GRADIENT_ACCUMULATION_STEPS,
+            per_device_train_batch_size=MICRO_BATCH_SIZE,
+            per_device_eval_batch_size=MICRO_BATCH_SIZE,
+            gradient_accumulation_steps=GRADIENT_ACCUMULATION_STEPS,
             warmup_steps=100,
             num_train_epochs=EPOCHS,
             max_steps=STEPS,
